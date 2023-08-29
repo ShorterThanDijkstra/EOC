@@ -1,0 +1,4 @@
+(let ([x 0])
+  (begin (while (< x 17)
+            (set! x (+ x (read))))
+     x))

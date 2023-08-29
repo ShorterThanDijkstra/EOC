@@ -1,0 +1,40 @@
+#!/usr/bin/racket
+#lang racket
+(require "utilities.rkt")
+(require "compiler.rkt")
+
+(define file (vector-ref (current-command-line-arguments) 0))
+
+(define p0 (read-program file))
+
+(define p1 (shrink p0))
+
+(define p2 (uniquify p1))
+
+(define p3 (uncover-get! p2))
+
+(define p4 (remove-complex-opera* p3))
+
+(define p5 (explicate-control p4))
+
+(define p6 (select-instructions p5))
+
+(define p7 (uncover-live p6))
+
+(define p8 (build-interference p7))
+
+(define p9 (allocate-registers p8))
+
+(define p10 (remove-jumps p9))
+
+(define p11 (patch-instructions p10))
+
+(define p12 (prelude-and-conclusion p11))
+
+(define out-file (string-append file ".s"))
+
+(displayln (string-append "compiling " file " to " out-file))
+
+(define out (open-output-file out-file #:exists 'truncate))
+
+(displayln (print-x86 p12) out)
